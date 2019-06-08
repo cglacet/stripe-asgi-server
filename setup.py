@@ -27,6 +27,7 @@ setuptools.setup(
     install_requires=[
         "aiohttp-asynctools >= 0.1.2",
         "fastapi[all] >= 0.29.0",
+        "gunicorn",
         "async-stripe >= 0.1.1",
         "Babel >= 2.7.0",
     ],
