@@ -1,0 +1,139 @@
+:root {
+  --main-color: rgb(126, 213, 165);
+  --error-color: #D9554F;
+
+  --main-font: 'Roboto';
+  --logo-font: 'Quicksand';
+  --kune-font: var(--logo-font), var(--main-font), sans-serif;
+}
+
+html {
+  font-family: var(--main-font), 'Source Sans Pro', 'Helvetica', 'Arial', sans-serif;
+}
+
+body {
+  padding: 20px;
+}
+
+#loading {
+  text-align: center;
+}
+
+.kune {
+  color: var(--main-color);
+  font-family: var(--kune-font);
+  font-size: 2.5rem;
+  font-variant: small-caps;
+  font-weight: 900;
+}
+
+.spinning {
+  display: inline-block;
+  perspective: 1000px;
+  animation-duration: 1.8s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+  animation-name: spin;
+}
+@keyframes spin {
+  to {
+    transform: rotateY(360deg);
+      -webkit-transform: rotateY(360deg);
+      -moz-transform: rotateY(360deg);
+      -ms-transform: rotateY(360deg);
+      -o-transform: rotateY(360deg);
+  }
+}
+
+#donation_info {
+  margin: 0 auto 80px auto;
+  max-width: 400;
+  text-align: center;
+}
+
+#payment {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+#cardholder-name {
+  width: calc(100% - 40px);
+  font-size: 1em;
+}
+
+/**
+ * The CSS shown here will not be introduced in the Quickstart guide, but shows
+ * how you can use CSS to style your Element's container.
+ */
+ .StripeElement, #cardholder-name {
+    margin: 20px;
+    box-sizing: border-box;
+
+    height: 40px;
+
+    padding: 10px 12px;
+
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: white;
+
+    box-shadow: 0 1px 3px 0 #e6ebf1;
+    -webkit-transition: box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
+  }
+
+  .StripeElement--focus, #cardholder-name:focus {
+    box-shadow: 0 1px 3px 0 #cfd7df;
+    outline: none;
+  }
+
+  .StripeElement--invalid, #cardholder-name--invalid {
+    border-color: #fa755a;
+  }
+
+  .StripeElement--webkit-autofill, #cardholder-name--webkit-autofill {
+    background-color: #fefde5 !important;
+  }
+
+#payment #card-button {
+    display: block;
+    margin: 0 auto;
+    width: 180px;
+    max-width: 48vw;
+    padding: 10px 20px;
+
+    font-size: .9em;
+    font-weight: bold;
+    color: #333;
+
+    border-radius: 30px;
+    border: 1px solid #F9F9F9;
+    background-color: var(--main-color);
+    cursor: pointer;
+    outline: none;
+}
+
+/* #payment #card-button::before {
+  content: "❤️";
+  padding-right: 5px;
+} */
+
+
+#success, #failure {
+  margin: 50px;
+}
+
+#success img, #failure img {
+  display: block;
+  margin: 0 auto;
+  width: 250px;
+  padding: 20px;
+  max-width: calc(90% - 2 * 20px);
+}
+
+#failure .reason {
+  margin: 0 auto;
+  text-align: center;
+  width: 250px;
+  max-width: calc(90% - 2 * 20px);
+}
