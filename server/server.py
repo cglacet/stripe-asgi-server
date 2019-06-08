@@ -15,9 +15,13 @@ In which case you will probably see an error message saying::
 
     Error: class uri 'uvicorn.workers.UvicornWorker' invalid or not found:
 
-If that's the case, then just run the following command instead:
+If that's the case, then don't forget to activate the virtual env before running the app:
 
-    .venv/bin/gunicorn server:app -w 4 -k uvicorn.workers.UvicornWorker
+    . .venv/bin/actiate
+
+Accessible at:
+    http://0.0.0.0:5000/checkout?amount=1000&currency=eur&receipt_email=cglacet@kune.tech
+
 
 Author: `cglacet cglacet`_
 
@@ -49,6 +53,10 @@ async def startup_event():
 async def shutdown_event():
     await stripe.close_session()
     print("Stripe session closed.")
+
+@app.get('/')
+async def hello():
+    return "Hello from kune!"
 
 
 @app.get('/checkout')
