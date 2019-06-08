@@ -25,9 +25,9 @@ setuptools.setup(
     license='MIT',
     zip_safe=False,
     install_requires=[
-        "asynctools >= 0.1.3",
+        "aiohttp-asynctools >= 0.1.2",
         "fastapi[all]",
-        "async-stripe",
+        "async-stripe >= 0.1.1",
     ],
     setup_requires=[
         "pytest-runner",
