@@ -10,6 +10,15 @@ While in developement, you can run::
 For production server, you may want to run something that look like::
     gunicorn server:app -w 4 -k uvicorn.workers.UvicornWorker
 
+If you are inside a virtualenv, it's possible that gunicorn is not mapped correctly to the local version.
+In which case you will probably see an error message saying::
+
+    Error: class uri 'uvicorn.workers.UvicornWorker' invalid or not found:
+
+If that's the case, then just run the following command instead:
+
+    .venv/bin/gunicorn server:app -w 4 -k uvicorn.workers.UvicornWorker
+
 Author: `cglacet cglacet`_
 
 .. _cglacet: https://github.com/cglacet

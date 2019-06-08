@@ -26,8 +26,9 @@ setuptools.setup(
     zip_safe=False,
     install_requires=[
         "aiohttp-asynctools >= 0.1.2",
-        "fastapi[all]",
+        "fastapi[all] >= 0.29.0",
         "async-stripe >= 0.1.1",
+        "Babel >= 2.7.0",
     ],
     setup_requires=[
         "pytest-runner",
