@@ -80,13 +80,13 @@ class Item(BaseModel):
     currency: str
     receipt_email: str
 
-@app.post('/checkout')
-async def checkout(request: Request, body: Item):
-#async def checkout(request: Request, amount: str, currency: str, receipt_email: str):
+@app.get('/checkout')
+#async def checkout(request: Request, body: Item):
+async def checkout(request: Request, amount: str, currency: str, receipt_email: str):
     params = {
-        "amount": body.amount,
-        "currency": body.currency,
-        "receipt_email": body.receipt_email,
+        "amount": amount,
+        "currency": currency,
+        "receipt_email": receipt_email,
     }
     options = {
         "description": "Test payement",

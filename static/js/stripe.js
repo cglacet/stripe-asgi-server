@@ -54,7 +54,6 @@ function handleFailure(error){
   failureReason.innerHTML = error.message; //JSON.stringify(error, null, '\t');
 }
 
-
 function hide(element){
   element.style.display = "none";
 }
