@@ -1,6 +1,6 @@
 # ASGI Server for Strip Payments
 
-In order to run this server, you need to set the environnement variable `` set with your private stripe token:
+In order to run this server, you need to set the environnement variable `STRIPE_KEY` set with your private stripe token:
 
 ```console
 export STRIPE_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
