@@ -1,8 +1,7 @@
 <html>
 <head>
   <title>Don {{ local_price_tag }}</title>
-  <!-- <link href="static/css/styles.css" rel="stylesheet"> -->
-  <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+  <link href="static/css/styles.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://js.stripe.com/v3/"></script>
 </head>
@@ -44,8 +43,7 @@
     </footer>
   </div>
 
-  <!-- <script src="/static/js/stripe.js"></script> -->
-  <script src="{{ url_for('static', path='/js/stripe.js') }}"></script>
+  <script src="/static/js/stripe.js"></script>
 </body>
 
 </html>
