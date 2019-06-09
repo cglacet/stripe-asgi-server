@@ -30,6 +30,7 @@ Author: `cglacet cglacet`_
 from babel import numbers, Locale
 
 from fastapi import FastAPI
+from pydantic import BaseModel
 from starlette.requests import Request
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
@@ -59,12 +60,18 @@ async def hello():
     return "Hello from kune!"
 
 
+class Item(BaseModel):
+    amount: str
+    currency: str
+    receipt_email: str
+
 @app.post('/checkout')
-async def checkout(request: Request, amount: str, currency: str, receipt_email: str):
+async def checkout(request: Request, body: Item):
+#async def checkout(request: Request, amount: str, currency: str, receipt_email: str):
     params = {
-        "amount": amount,
-        "currency": currency,
-        "receipt_email": receipt_email,
+        "amount": body.amount,
+        "currency": body.currency,
+        "receipt_email": body.receipt_email,
     }
     options = {
         "description": "Test payement",
