@@ -1,1 +1,1 @@
-web: gunicorn server:app -w 4 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips *
+web: gunicorn server:app -w 4 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips "*"
