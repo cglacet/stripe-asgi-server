@@ -1,6 +1,6 @@
 :root {
   --main-color: rgb(126, 213, 165);
-  --error-color: #D9554F;
+  --error-color: rgb(250, 117, 90);
 
   --main-font: 'Roboto';
   --logo-font: 'Quicksand';
@@ -120,7 +120,10 @@ body {
 
 
 #success, #failure {
-  margin: 50px;
+  margin: 20px;
+  opacity: 0;
+  transition: opacity .5s ease-in-out;
+  min-height: 2.2em;
 }
 
 #success img, #failure img {
@@ -131,11 +134,22 @@ body {
   max-width: calc(90% - 2 * 20px);
 }
 
+#success .reason {
+  margin: 0 auto;
+  text-align: center;
+  width: 250px;
+  max-width: calc(90% - 2 * 20px);
+  color: var(--main-color);
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
 #failure .reason {
   margin: 0 auto;
   text-align: center;
   width: 250px;
   max-width: calc(90% - 2 * 20px);
+  color: var(--error-color);
 }
 
 footer {

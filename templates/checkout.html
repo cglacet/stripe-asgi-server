@@ -10,6 +10,12 @@
   <div id="donation_info">
     <h1>Validez votre don de {{ local_price_tag }}</h1>
   </div>
+
+  <div id="success" style="display: none">
+    <div class="reason">Merci pour votre soutien !</div>
+    <!-- <img src="https://media.giphy.com/media/U8bDgsXcnIEFy/giphy.gif" alt="Gif disant merci." /> -->
+  </div>
+
   <div id="payment">
 
     <!-- Automated payment using user's registered information -->
@@ -18,23 +24,18 @@
     </div>
 
     <!-- Manual payment   -->
-    <input id="cardholder-name" type="text" placeholder="Nom">
+    <input id="cardholder-name" type="text" name="name" placeholder="Nom" required>
     <div id="card-element"></div>
+
+    <div id="failure">
+      <div class="reason"></div>
+    </div>
+
     <button id="card-button" data-secret="{{ client_secret }}">
       Donner {{ local_price_tag }}
     </button>
     <div id="loading" style="display: none">
         <div class="spinning kune">K</div>
-    </div>
-
-    <div id="success" style="display: none">
-      <div class="reason"></div>
-      <img src="https://media.giphy.com/media/U8bDgsXcnIEFy/giphy.gif" alt="Gif disant merci." />
-    </div>
-
-    <div id="failure" style="display: none">
-      <div class="reason"></div>
-      <img src="https://media.giphy.com/media/3ohs7Xs7RKcOxic5Es/giphy.gif" alt="Gif disant don décliné." />
     </div>
 
     <footer>
