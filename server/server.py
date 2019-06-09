@@ -31,6 +31,8 @@ from babel import numbers, Locale
 
 from fastapi import FastAPI
 from pydantic import BaseModel
+
+from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
@@ -39,7 +41,20 @@ from async_stripe import Stripe
 
 DEFAULT_LOCALE = "fr_FR"
 
+## Load this from a environement variable ? $ALLOWED_HOSTS
+ALLOWED_HOSTS = None
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ["*"]
+
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_HOSTS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 stripe = Stripe()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
