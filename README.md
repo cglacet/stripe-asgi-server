@@ -3,7 +3,7 @@
 In order to run this server, you need to set the environnement variable `` set with your private stripe token:
 
 ```console
-$ export STRIPE_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+export STRIPE_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 Running the server:
