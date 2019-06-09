@@ -59,7 +59,7 @@ async def hello():
     return "Hello from kune!"
 
 
-@app.get('/checkout')
+@app.post('/checkout')
 async def checkout(request: Request, amount: str, currency: str, receipt_email: str):
     params = {
         "amount": amount,
