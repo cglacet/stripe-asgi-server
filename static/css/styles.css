@@ -137,3 +137,12 @@ body {
   width: 250px;
   max-width: calc(90% - 2 * 20px);
 }
+
+footer {
+  position: absolute;
+  margin: 0 auto;
+  bottom: 0;
+  height: 40px;
+  margin-top: 40px;
+  font-size: .8em;
+}
