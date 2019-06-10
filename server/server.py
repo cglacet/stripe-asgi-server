@@ -75,13 +75,15 @@ async def hello():
     return "Hello from kune!"
 
 
-class Item(BaseModel):
-    amount: str
-    currency: str
-    receipt_email: str
+# class Item(BaseModel):
+#     amount: str
+#     currency: str
+#     receipt_email: str
 
-@app.get('/checkout')
+# @app.post('/create_payment')
 #async def checkout(request: Request, body: Item):
+
+@app.get('/create_payment')
 async def checkout(request: Request, amount: str, currency: str, receipt_email: str):
     params = {
         "amount": amount,
@@ -103,7 +105,24 @@ async def checkout(request: Request, amount: str, currency: str, receipt_email: 
         }
     return templates.TemplateResponse("checkout.html", template_params)
 
-@app.get('/update/{payement_intent}')
+
+@app.get('/secret')
+async def checkout(amount: str, currency: str, receipt_email: str):
+    params = {
+        "amount": amount,
+        "currency": currency,
+        "receipt_email": receipt_email,
+    }
+    options = {
+        "description": "Test payement",
+        "statement_descriptor": "Kune.tech",
+    }
+    async with stripe.create_payment(**params, **options) as response:
+        payment = await response.json()
+        payment_client_info = ["client_secret"]
+        return { "client_secret": payment["client_secret"] }
+
+@app.get('/update_payment/{payement_intent}')
 async def update(payement_intent: str, amount: str, currency: str = None, order_id: str = None):
     params = {
         "amount": amount,
