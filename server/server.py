@@ -165,6 +165,9 @@ def payment_form(request: Request, intent):
         "localized_price_tag": localized_price_tag(intent),
         **intent
     }
+    print("Request headers", request.headers)
+    print("Client host", request.client.host)
+    print("Client", request.client)
     return templates.TemplateResponse("checkout.html", template_params)
 
 
