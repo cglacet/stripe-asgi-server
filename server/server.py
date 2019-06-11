@@ -7,6 +7,10 @@ Quickstart guide from Stipe can be found here (this server is an implementation 
 While in developement, you can run::
     uvicorn server:app --reload
 
+Your app will be accessible at::
+
+    http://127.0.0.1:8000/create_payment?amount=1000&currency=eur&receipt_email=cglacet@kune.tech
+
 For production server, you may want to run something that look like::
     gunicorn server:app -w 4 -k uvicorn.workers.UvicornWorker
 
@@ -20,7 +24,7 @@ If that's the case, then don't forget to activate the virtual env before running
     . .venv/bin/actiate
 
 Accessible at:
-    http://0.0.0.0:5000/checkout?amount=1000&currency=eur&receipt_email=cglacet@kune.tech
+    http://0.0.0.0:5000/create_payment?amount=1000&currency=eur&receipt_email=cglacet@kune.tech
 
 
 Author: `cglacet cglacet`_
@@ -72,81 +76,94 @@ async def shutdown_event():
 
 @app.get('/')
 async def hello():
-    return "Hello from kune!"
+    return "This is the Stripe API ASGI server!"
 
 
-# class Item(BaseModel):
-#     amount: str
-#     currency: str
-#     receipt_email: str
+class Item(BaseModel):
+    amount: str
+    currency: str
+    receipt_email: str
 
-# @app.post('/create_payment')
-#async def checkout(request: Request, body: Item):
 
-@app.get('/create_payment')
-async def checkout(request: Request, amount: str, currency: str, receipt_email: str):
+@app.post('/create_payment')
+async def create_payment(body: Item):
+    """Creates a payment intent, the stripe response.
+    The response details can be found on the stripe API documentation:
+    `PaymentIntent object <https://stripe.com/docs/api/payment_intents/object>`.
+
+    Call example::
+        http://127.0.0.1:8000/create_payment
+
+    With body set to::
+        { "amount": 1000, "currency": "eur", "receipt_email": "cglacet@kune.tech" }
+
+    """
     params = {
-        "amount": amount,
-        "currency": currency,
-        "receipt_email": receipt_email,
+        "amount": body.amount,
+        "currency": body.currency,
+        "receipt_email": body.receipt_email,
     }
+    return await payment(**params)
+
+
+@app.get('/create_payment_form')
+async def create_payment_form(request: Request, amount: int, currency: str, receipt_email: str):
+    """Creates a payment and directly returns the HTML payment form.
+
+    Call example::
+        http://127.0.0.1:8000/create_payment_form?amount=1000&currency=eur&receipt_email=cglacet@kune.tech
+
+    """
+    intent = await payment(amount=amount, currency=currency, receipt_email=receipt_email)
+    return payment_form(request, intent)
+
+
+@app.get('/get_payment_form/{payment_id}')
+async def get_payment_form(request: Request, payment_id: str, amount: int = None, currency: str = None, receipt_email: str = None):
+    """Returns the payment form associated to the given payment ``payment_id``.
+    This returns the HTML payment form.
+
+    This will update the payment if any optional parameter is provided.
+
+    The ``payment_id`` is of the form ``pi_xxxxxxxxxxxxxxxxxxxxxxxx``.
+
+    Call example::
+        http://127.0.0.1:8000/get_payment_form/pi_1EjZm4ColNztjCkCmEFngFgB
+
+    """
+    # Maybe require currency when amount is requested for a change?
+    update_payment = stripe.update_payment(payment_id, amount=amount, currency=currency, receipt_email=receipt_email)
+    async with update_payment as response:
+        intent = await response.json()
+        return payment_form(request, intent)
+
+async def payment(**params):
     options = {
         "description": "Test payement",
         "statement_descriptor": "Kune.tech",
     }
     async with stripe.create_payment(**params, **options) as response:
-        payment = await response.json()
-        local_price_tag = stripe_price_tag(payment["amount"], payment["currency"])
-        payment_client_info = ["client_secret"]  # You can add more values to be passed to the client, eg.  "amount", "currency", ...
-        template_params = {
-            "request": request,
-            "local_price_tag": local_price_tag,
-            **{k: payment[k] for k in payment_client_info}
-        }
+        return await response.json()
+
+
+def payment_form(request: Request, intent):
+    """Returns the HTML payment form with the specified parameters
+
+    The ``payment_id`` is of the form ``pi_xxxxxxxxxxxxxxxxxxxxxxxx``.
+
+    Call example::
+        http://127.0.0.1:8000/payment_form/pi_1EjZm4ColNztjCkCmEFngFgB?amount=1000&currency=eur
+
+    """
+    template_params = {
+        "request": request,
+        "localized_price_tag": localized_price_tag(intent),
+        **intent
+    }
     return templates.TemplateResponse("checkout.html", template_params)
 
 
-@app.get('/secret')
-async def checkout(amount: str, currency: str, receipt_email: str):
-    params = {
-        "amount": amount,
-        "currency": currency,
-        "receipt_email": receipt_email,
-    }
-    options = {
-        "description": "Test payement",
-        "statement_descriptor": "Kune.tech",
-    }
-    async with stripe.create_payment(**params, **options) as response:
-        payment = await response.json()
-        payment_client_info = ["client_secret"]
-        return { "client_secret": payment["client_secret"] }
-
-@app.get('/update_payment/{payement_intent}')
-async def update(payement_intent: str, amount: str, currency: str = None, order_id: str = None):
-    params = {
-        "amount": amount,
-    }
-    if order_id is not None:
-        params["metadata"] = {
-            "order_id": order_id,
-        }
-    if currency is not None:
-        params["currency"] = currency
-    async with stripe.modify_payment(payement_intent, **params) as response:
-        payment = await response.json()
-        payment_intent = payment["id"]
-        print("Updated payment", payment["amount"], payment["currency"])
-
-
-def _custom_format_currency(value, currency, locale):
-    value = numbers.decimal.Decimal(value)
-    locale = Locale.parse(locale)
-    pattern = locale.currency_formats['standard']
-    force_frac = ((0, 0) if value == int(value) else None)
-    return pattern.apply(value, locale, currency=currency, force_frac=force_frac)
-
-def stripe_price_tag(amount_cts, currency, locale=DEFAULT_LOCALE, **kwargs):
+def localized_price_tag(payment_intent, locale=DEFAULT_LOCALE, **kwargs):
     """Format price according to an optional ``locale``.
     For example::
 
@@ -157,11 +174,21 @@ def stripe_price_tag(amount_cts, currency, locale=DEFAULT_LOCALE, **kwargs):
         >>> format_price(1050, "EUR", locale="en_US")
         €10.50
     """
-    amount = amount_cts/100
+    amount = payment_intent["amount"]/100
     # http://babel.pocoo.org/en/latest/api/numbers.html#babel.numbers.format_currency:
     # return numbers.format_currency(amount, currency.upper(), locale=locale, decimal_quantization=False, **kwargs)
     # https://github.com/python-babel/babel/issues/478#issuecomment-290365787:
-    return _custom_format_currency(amount, currency.upper(), locale)
+    return _custom_format_currency(amount, payment_intent["currency"].upper(), locale)
+
+
+
+def _custom_format_currency(value, currency, locale):
+    value = numbers.decimal.Decimal(value)
+    locale = Locale.parse(locale)
+    pattern = locale.currency_formats['standard']
+    force_frac = ((0, 0) if value == int(value) else None)
+    return pattern.apply(value, locale, currency=currency, force_frac=force_frac)
+
 
 if __name__ == "__main__":
     import uvicorn
