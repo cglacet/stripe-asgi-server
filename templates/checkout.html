@@ -1,14 +1,14 @@
 <html>
 <head>
-  <title>Don {{ local_price_tag }}</title>
-  <link href="static/css/styles.css" rel="stylesheet">
+  <title>Don de {{ localized_price_tag }}</title>
+  <link href="/static/css/styles.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://js.stripe.com/v3/"></script>
 </head>
 
 <body>
   <div id="donation_info">
-    <h1>Validez votre don de {{ local_price_tag }}</h1>
+    <h1>Validez votre don de {{ localized_price_tag }}</h1>
   </div>
 
   <div id="success" style="display: none">
@@ -32,7 +32,7 @@
     </div>
 
     <button id="card-button" data-secret="{{ client_secret }}">
-      Donner {{ local_price_tag }}
+      Donner {{ localized_price_tag }}
     </button>
     <div id="loading" style="display: none">
         <div class="spinning kune">K</div>
