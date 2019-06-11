@@ -139,7 +139,7 @@ async def get_payment_form(request: Request, payment_id: str, amount: int = None
     update_payment = stripe.update_payment(payment_id, amount=amount, currency=currency, receipt_email=receipt_email)
     async with update_payment as response:
         intent = await response.json()
-        logger(f"Get payment with intent = {intent}")
+        print(f"Get payment with intent = {intent}")
         return payment_form(request, intent)
 
 async def payment(**params):
