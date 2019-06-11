@@ -46,10 +46,9 @@ function handleSucces(paymentIntent){
   show(successDiv);
   visible(successDiv);
   hide(paymentForm);
-  const {description, receipt_email, currency, amount} = paymentIntent;
-  console.log(description, receipt_email, currency, amount);
-  // Add try catch
-  onPaymentFinished(paymentIntent);
+  // const {description, receipt_email, currency, amount} = paymentIntent;
+  // console.log(description, receipt_email, currency, amount);
+  sendToReferrer({status: "success"});
 }
 
 function handleFailure(error){
@@ -57,8 +56,9 @@ function handleFailure(error){
   show(cardButton);
   invisible(successDiv);
   visible(failureDiv);
-  console.log("Error with payment: ", error);
-  failureReason.innerHTML = error.message;
+  // console.log("Error with payment: ", error);
+  // failureReason.innerHTML = error.message;
+  sendToReferrer({status: "error", error:error});
 }
 
 function hide(element){
@@ -75,4 +75,13 @@ function invisible(element){
 
 function visible(element){
   element.style.opacity = 1;
+}
+
+// clientSecret
+function sendToReferrer(message){
+  const params = new URLSearchParams(window.location.search);
+  const referrer = params.get('referrer');
+  if (window.parent != window && referrer !== null){
+    window.parent.postMessage(message, referrer);
+  }
 }
