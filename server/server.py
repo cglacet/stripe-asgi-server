@@ -43,6 +43,10 @@ from starlette.templating import Jinja2Templates
 
 from async_stripe import Stripe
 
+import logging
+
+logger = logging.getLogger('Stripe Server')
+
 DEFAULT_LOCALE = "fr_FR"
 
 ## Load this from a environement variable ? $ALLOWED_HOSTS
@@ -135,6 +139,7 @@ async def get_payment_form(request: Request, payment_id: str, amount: int = None
     update_payment = stripe.update_payment(payment_id, amount=amount, currency=currency, receipt_email=receipt_email)
     async with update_payment as response:
         intent = await response.json()
+        logger(f"Get payment with intent = {intent}")
         return payment_form(request, intent)
 
 async def payment(**params):
