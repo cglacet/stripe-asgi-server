@@ -47,10 +47,10 @@ docs:
 	open docs/_build/html/index.html
 
 release: clean
-	python setup.py bdist_wheel
+	python setup.py sdist
 	twine upload dist/*
 
 sdist: clean
-	python setup.py bdist_wheel
+	python setup.py sdist
 	twine upload dist/*
 	ls -l dist
