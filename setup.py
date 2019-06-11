@@ -11,7 +11,7 @@ github_url = "https://github.com/cglacet/stripe-asgi-server"
 
 setuptools.setup(
     name='stripe-asgi-server',
-    version='0.0.1',
+    version='0.0.2',
     description='An asgi server for stripe payments',
     url=github_url,
     project_urls={
@@ -28,7 +28,7 @@ setuptools.setup(
         "aiohttp-asynctools >= 0.1.2",
         "fastapi[all] >= 0.29.0",
         "gunicorn",
-        "async-stripe >= 0.1.1",
+        "async-stripe >= 0.1.2",
         "Babel >= 2.7.0",
     ],
     setup_requires=[
