@@ -80,8 +80,11 @@ function visible(element){
 // clientSecret
 function sendToReferrer(message){
   const params = new URLSearchParams(window.location.search);
-  const referrer = params.get('referrer');
+  let referrer = params.get('referrer');
   if (window.parent != window && referrer !== null){
+    if (referrer == "file://"){
+      referrer = '*';
+    }
     window.parent.postMessage(message, referrer);
   }
 }
