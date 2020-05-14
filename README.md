@@ -29,4 +29,10 @@ where this service comes in.
 The `stripe-asgi-server` is a minimal working server that will perform all secret actions
 using the [`async-stripe`][async-stripe] module, for all the outgoing requests.
 
+For example, if you want to create a `PaymentIntent` in javascript:
+
+```js
+
+```
+
 [async-stripe]: https://github.com/cglacet/async-stripe
